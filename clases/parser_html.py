@@ -1,4 +1,4 @@
-from Articulo import Articulo
+from clases.articulo import Articulo
 from datetime import datetime
 from collections import defaultdict
 import os
@@ -91,8 +91,8 @@ class ParserHtml:
         for autor, articulos_autor in autores.items():
             articulos_html += f"""
             <section id="{autor.replace(' ', '_').lower()}">
-                <h3>Artículos de {autor}</h3>
                 <div class="container">
+                    <h3>Artículos de {autor}</h3>
                     <div class="row">"""
             for articulo in articulos_autor:
                 articulos_html += f"""
@@ -100,9 +100,9 @@ class ParserHtml:
                             {articulo.to_html()}
                         </div>"""
             articulos_html += """
+                    </div>
                 </div>
-                </div>"""
-            articulos_html += "</section>\n"
+            </section>\n"""
 
         # Genero la fecha actual en un formato legible
         fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M:%S")

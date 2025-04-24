@@ -1,4 +1,5 @@
-from LongitudInvalidaError import LongitudInvalidaError
+from clases.excepciones import LongitudInvalidaError
+
 class Articulo:
     def __init__(self, titulo, autor, texto):
         self._validar_longitud("título", titulo)
