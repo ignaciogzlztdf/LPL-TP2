@@ -91,9 +91,17 @@ class ParserHtml:
         for autor, articulos_autor in autores.items():
             articulos_html += f"""
             <section id="{autor.replace(' ', '_').lower()}">
-                <h3>Artículos de {autor}</h3>"""
+                <h3>Artículos de {autor}</h3>
+                <div class="container">
+                    <div class="row">"""
             for articulo in articulos_autor:
-                articulos_html += f"""{articulo.to_html()}"""
+                articulos_html += f"""
+                        <div class="col-sm-4">
+                            {articulo.to_html()}
+                        </div>"""
+            articulos_html += """
+                </div>
+                </div>"""
             articulos_html += "</section>\n"
 
         # Genero la fecha actual en un formato legible

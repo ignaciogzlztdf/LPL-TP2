@@ -12,13 +12,11 @@ class Articulo:
             raise LongitudInvalidaError(nombre_atributo, valor)
 
     def to_html(self):
-        return f"""
-                <article>
-                    <h2>{self.titulo}</h2>
-                    <h5>{self.autor}</h5>
-                    <p>{self.texto[:300] + ("…" if len(self.texto) > 300 else "")}</p>
-                </article>
-            """
+        return f"""<article>
+                                <h2>{self.titulo}</h2>
+                                <h5>{self.autor}</h5>
+                                <p>{self.texto[:300] + ("…" if len(self.texto) > 300 else "")}</p>
+                            </article>"""
 
     @property
     def titulo(self):
