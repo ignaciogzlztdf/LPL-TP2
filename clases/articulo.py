@@ -1,4 +1,5 @@
 from clases.excepciones import LongitudInvalidaError
+import os
 
 class Articulo:
     def __init__(self, titulo, autor, texto):
@@ -15,6 +16,13 @@ class Articulo:
 
 
     def to_html(self):
+        return f"""<article>
+                                <h2><a href="{os.path.join("html_articulos", f"{self.titulo.replace(' ', '_').lower()}.html")}">{self.titulo}</a></h2>
+                                <h5>{self.autor}</h5>
+                                <p>{self.texto[:300] + ("…" if len(self.texto) > 300 else "")}</p>
+                            </article>"""
+    
+    def to_html_sin_link(self):
         return f"""<article>
                                 <h2>{self.titulo}</h2>
                                 <h5>{self.autor}</h5>

@@ -1,4 +1,17 @@
 from clases.articulo import Articulo
+from datetime import datetime
+
+def generar_footer():
+    # Genero la fecha actual en un formato legible
+    fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    # Genero el footer con la fecha de generación
+    return f"""
+    <footer>
+        <p>Fecha y hora de generación: {fecha_actual}</p>
+    </footer>
+    """
+
 
 def generar_html_articulo(articulo:Articulo):
     # Generar HTML para el artículo específico
@@ -27,7 +40,9 @@ def generar_html_articulo(articulo:Articulo):
             <h1>Artículo</h1>
             <hr>
         </header>
-        {articulo.to_html()}
+        {articulo.to_html_sin_link()}
+        <a href="../index.html">Volver a la página principal</a>
+        {generar_footer()}
     </body>
     </html>
     """

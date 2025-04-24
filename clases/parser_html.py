@@ -2,7 +2,7 @@ from clases.articulo import Articulo
 from datetime import datetime
 from collections import defaultdict
 from utils.files_utils import guardar_en_archivo_html, crear_carpeta_html_articulos
-from utils.html_utils import generar_html_articulo
+from utils.html_utils import generar_html_articulo, generar_footer
 import os
 
 class ParserHtml:
@@ -72,15 +72,12 @@ class ParserHtml:
                 </div>
             </section>\n"""
 
-        # Genero la fecha actual en un formato legible
-        fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
         # Genero el índice de autores
-        indice_html = """<h2>Índice de Autores</h2>
+        indice_html = """<div class="container-fluid"> <h2>Índice de Autores</h2> </div>
                 <ul>"""
         for autor in autores.keys():
             indice_html += f"""
-                    <li><a href="#{autor.replace(" ", "_").lower()}">{autor}</a></li>"""
+                    <li class='nav-item'><a class='nav-link' href="#{autor.replace(" ", "_").lower()}">{autor}</a></li>"""
         indice_html += """
                 </ul>"""
 
@@ -110,13 +107,21 @@ class ParserHtml:
                 <h1>Mi Sitio de Artículos</h1>
                 <hr>
             </header>
-            <nav>
-                {indice_html}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAutores" aria-controls="navbarAutores" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarAutores">
+                    <ul class="navbar-nav mr-auto">
+                        {indice_html}
+                    </ul>
+                </div>
             </nav>
             {articulos_html}
-            <footer>
-                <p>Fecha de generación: {fecha_actual}</p>
-            </footer>
+            {generar_footer()}
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         </body>
         </html>
         """
