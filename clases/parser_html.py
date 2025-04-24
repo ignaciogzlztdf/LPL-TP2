@@ -1,6 +1,8 @@
 from clases.articulo import Articulo
 from datetime import datetime
 from collections import defaultdict
+from utils.files_utils import guardar_en_archivo_html, crear_carpeta_html_articulos
+from utils.html_utils import generar_html_articulo
 import os
 
 class ParserHtml:
@@ -11,9 +13,11 @@ class ParserHtml:
         
         self.articulos = articulos_filtrados
 
+        # Crear carpeta para guardar los archivos HTML de los artículos
+        crear_carpeta_html_articulos()
         # Generar HTML para cada artículo y guardarlo en un archivo
         for articulo in self.articulos:
-            self.crear_archivo_html_articulo(articulo, self.generar_html_articulo(articulo))
+            self.crear_archivo_html_articulo(generar_html_articulo(articulo), articulo.titulo.replace(' ', '_').lower())
 
 
     def filtrar_articulos(self, articulos):
@@ -37,42 +41,6 @@ class ParserHtml:
 
         return articulos_filtrados
 
-    def generar_html_articulo(self, articulo:Articulo):
-        # Generar HTML para el artículo específico
-        html_articulo = f"""
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <title>Artículos</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-            <style>
-                body {{ font-family: Arial, sans-serif; }}
-                header {{ text-align: center; }}
-                article {{ margin: 20px; padding: 10px; border: 1px solid #ccc; }}
-                footer {{ text-align: center; margin-top: 20px; }}
-                h1 {{ color: #333; }}
-                h2 {{ color: #555; }}
-                h4 {{ color: #777; }}
-                p {{ color: #999; }}
-                hr {{ border: 1px solid #ccc; }}
-            </style>
-        </head>
-        <body>
-            <header>
-                <h1>Artículo</h1>
-                <hr>
-            </header>
-            <article>
-                <h2>{articulo.titulo}</h2>
-                <h5>{articulo.autor}</h5>
-                <p>{articulo.texto[:300] + ("…" if len(articulo.texto) > 300 else "")}</p>
-            </article>
-        </body>
-        </html>
-        """
-        return html_articulo.strip()
 
     def generar_html_principal(self):
         # Agrupar artículos por autor
@@ -153,26 +121,18 @@ class ParserHtml:
         </html>
         """
         return html.strip()
-    
+
+
     def crear_archivo_html_principal(self, html_principal:str):
         html_principal = self.generar_html_principal()
-
-        # # Guardo el HTML en un archivo
-        archivo_nombre = "index.html"
-        with open(archivo_nombre, "w", encoding="utf-8") as archivo:
-            archivo.write(html_principal)
-
-    def crear_archivo_html_articulo(self, articulo:Articulo,html_articulo:str):
-        # Me aseguro de que la carpeta exista, si no existe la creo
-        carpeta_html_articulos = "html_articulos"
-        if not os.path.exists(carpeta_html_articulos):
-            os.makedirs(carpeta_html_articulos, exist_ok=True)
-        
-        # Construyo la ruta completa
-        nombre_archivo = articulo.titulo.replace(' ', '_').lower()
-        ruta_completa = os.path.join(carpeta_html_articulos, f"{nombre_archivo}.html")
-
         # Guardo el HTML en un archivo
-        with open(ruta_completa, "w", encoding="utf-8") as archivo:
-            archivo.write(html_articulo)
-            self.generar_html_articulo(articulo)
+        archivo_nombre = "index.html"
+
+        guardar_en_archivo_html(archivo_nombre, html_principal)
+
+
+    def crear_archivo_html_articulo(self, html_articulo:str, nombre_archivo:str, carpeta_html_articulos="html_articulos"):
+        # Construyo la ruta completa
+        ruta_completa = os.path.join(carpeta_html_articulos, f"{nombre_archivo}.html")
+        # Guardo el HTML en un archivo
+        guardar_en_archivo_html(ruta_completa, html_articulo)

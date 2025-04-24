@@ -2,6 +2,7 @@ from clases.parser_html import ParserHtml
 import json
 import webbrowser
 from clases.articulo import Articulo
+from utils.json_utils import cargar_articulos_json_en_lista
 
 # Cargar los artículos desde el archivo JSON
 # Y crear una lista de objetos Articulo
@@ -10,9 +11,7 @@ def cargar_articulos_json(archivo_json):
         datos = json.load(archivo)
         return [Articulo(d["titulo"], d["autor"], d["texto"]) for d in datos]
 
-
-archivo_json = "articulos.json"
-articulos = cargar_articulos_json(archivo_json)
+articulos = cargar_articulos_json_en_lista()
 
 parser = ParserHtml(articulos)
 parser.crear_archivo_html_principal(parser.generar_html_principal())
