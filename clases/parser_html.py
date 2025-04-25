@@ -1,17 +1,19 @@
 from clases.articulo import Articulo
-from datetime import datetime
 from collections import defaultdict
 from utils.files_utils import guardar_en_archivo_html, crear_carpeta_html_articulos
-from utils.html_utils import generar_html_articulo, generar_footer
+from utils.html_utils import generar_html_articulo, generar_footer, generar_tabla_html_articulos_por_autor, generar_tabla_html_autores_por_letra
+from utils.json_utils import contar_articulos_por_autor, obtener_autores_por_letra
 import os
 
 class ParserHtml:
     def __init__(self, articulos):
-        articulos_filtrados = self.filtrar_articulos(articulos)
+        articulos_filtrados = self.filtrar_articulos_invalidos(articulos)
         if not articulos_filtrados:
             raise ValueError("No hay artículos válidos para procesar.")
         
         self.articulos = articulos_filtrados
+
+        self.articulos = self.filtrar_articulos_por_palabra()
 
         # Crear carpeta para guardar los archivos HTML de los artículos
         crear_carpeta_html_articulos()
@@ -20,7 +22,7 @@ class ParserHtml:
             self.crear_archivo_html_articulo(generar_html_articulo(articulo), articulo.titulo.replace(' ', '_').lower())
 
 
-    def filtrar_articulos(self, articulos):
+    def filtrar_articulos_invalidos(self, articulos):
         articulos_filtrados = []
 
         for articulo in articulos:
@@ -39,6 +41,17 @@ class ParserHtml:
 
             articulos_filtrados.append(articulo)
 
+        return articulos_filtrados
+
+
+    def filtrar_articulos_por_palabra(self, palabra_clave=""):
+        if palabra_clave == "":
+            return self.articulos
+        
+        articulos_filtrados = []
+        for articulo in self.articulos:
+            if palabra_clave.lower() in articulo.texto.lower():
+                articulos_filtrados.append(articulo)
         return articulos_filtrados
 
 
@@ -107,6 +120,8 @@ class ParserHtml:
                 <h1>Mi Sitio de Artículos</h1>
                 <hr>
             </header>
+            {generar_tabla_html_articulos_por_autor(contar_articulos_por_autor(self.articulos))}
+            {generar_tabla_html_autores_por_letra(obtener_autores_por_letra(self.articulos))}
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAutores" aria-controls="navbarAutores" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

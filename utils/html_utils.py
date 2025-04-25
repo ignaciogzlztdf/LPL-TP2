@@ -47,3 +47,61 @@ def generar_html_articulo(articulo:Articulo):
     </html>
     """
     return html_articulo.strip()
+
+
+def generar_tabla_html_articulos_por_autor(articulos_por_autor):
+    html = """
+    <table border="1" style="border-collapse: collapse; width: 50%;">
+        <thead>
+            <tr>
+                <th>Autor</th>
+                <th>Cantidad de artículos</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
+    for autor, cantidad in articulos_por_autor.items():
+        html += f"""
+            <tr>
+                <td>{autor}</td>
+                <td>{cantidad}</td>
+            </tr>
+        """
+    html += """
+        </tbody>
+    </table>
+    """
+    return html
+
+def generar_tabla_html_autores_por_letra(autores_por_letra):
+    html = """
+    <table border="1" style="border-collapse: collapse; width: 50%;">
+        <thead>
+            <tr>
+                <th>Letra</th>
+                <th>Autores</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
+    for letra, lista_autores in autores_por_letra.items():
+        if not lista_autores:
+             html += f"""
+            <tr>
+                <td>{letra}</td>
+                <td> - </td>
+            </tr>
+        """
+        else:
+            lista_autores = ", ".join(sorted(lista_autores))
+            html += f"""
+                <tr>
+                    <td>{letra}</td>
+                    <td>{lista_autores}</td>
+                </tr>
+            """
+    html += """
+        </tbody>
+    </table>
+    """
+    return html
