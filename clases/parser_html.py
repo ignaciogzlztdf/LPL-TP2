@@ -17,9 +17,15 @@ class ParserHtml:
 
         # Crear carpeta para guardar los archivos HTML de los artículos
         crear_carpeta_html_articulos()
-        # Generar HTML para cada artículo y guardarlo en un archivo
-        for articulo in self.articulos:
-            self.crear_archivo_html_articulo(generar_html_articulo(articulo), articulo.titulo.replace(' ', '_').lower())
+
+        articulos_ordenados = sorted(self.articulos, key=lambda a: a.autor.lower())
+
+        for i, articulo in enumerate(articulos_ordenados):
+            anterior = articulos_ordenados[i - 1] if i > 0 else None
+            siguiente = articulos_ordenados[i + 1] if i < len(articulos_ordenados) - 1 else None
+
+            html = generar_html_articulo(articulo, anterior, siguiente)
+            self.crear_archivo_html_articulo(html, articulo.titulo.replace(' ', '_').lower())
 
 
     def filtrar_articulos_invalidos(self, articulos):
@@ -120,13 +126,20 @@ class ParserHtml:
                 <h1>Mi Sitio de Artículos</h1>
                 <hr>
             </header>
-            {generar_tabla_html_articulos_por_autor(contar_articulos_por_autor(self.articulos))}
-            {generar_tabla_html_autores_por_letra(obtener_autores_por_letra(self.articulos))}
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {generar_tabla_html_articulos_por_autor(contar_articulos_por_autor(self.articulos))}
+                    </div>
+                    <div class="col-sm-6">
+                        {generar_tabla_html_autores_por_letra(obtener_autores_por_letra(self.articulos))}
+                    </div>
+                </div>
+            </div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarAutores" aria-controls="navbarAutores" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarAutores">
                     <ul class="navbar-nav mr-auto">
                         {indice_html}

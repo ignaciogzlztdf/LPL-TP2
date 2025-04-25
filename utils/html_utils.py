@@ -13,7 +13,23 @@ def generar_footer():
     """
 
 
-def generar_html_articulo(articulo:Articulo):
+def generar_html_articulo(articulo:Articulo, articulo_anterior=None, articulo_siguiente=None):
+    enlaces_navegacion = "<div class='d-flex justify-content-between'>"
+
+    if articulo_anterior:
+        enlace_anterior = articulo_anterior.titulo.replace(" ", "_").lower() + ".html"
+        enlaces_navegacion += f'<a href="{enlace_anterior}">&larr; Anterior</a>'
+    else:
+        enlaces_navegacion += "<span></span>"
+
+    if articulo_siguiente:
+        enlace_siguiente = articulo_siguiente.titulo.replace(" ", "_").lower() + ".html"
+        enlaces_navegacion += f'<a href="{enlace_siguiente}">Siguiente &rarr;</a>'
+    else:
+        enlaces_navegacion += "<span></span>"
+
+    enlaces_navegacion += "</div><hr>"
+
     # Generar HTML para el artículo específico
     html_articulo = f"""
     <!DOCTYPE html>
@@ -41,6 +57,8 @@ def generar_html_articulo(articulo:Articulo):
             <hr>
         </header>
         {articulo.to_html_sin_link()}
+        {enlaces_navegacion}
+        <hr>
         <a href="../index.html">Volver a la página principal</a>
         {generar_footer()}
     </body>
